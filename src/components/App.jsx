@@ -17,21 +17,37 @@ export class App extends Component {
     filter: '',
   };
 
-  onSubmitHandler = data => {
-    const { name, number } = data;
+  onSubmitHandler = () => {
+    const contact = localStorage.getItem('Contacts');
+    const { name, number } = JSON.parse(contact);
     if (this.state.contacts.find(elem => elem.name === name)) {
       return alert(`${name} is already exists in contacts`);
     }
     if (this.state.contacts.find(elem => elem.number === number)) {
       return alert(`${number} is already exists`);
     }
-    return this.setState(prevState => {
-      return { contacts: [...prevState.contacts, data] };
+
+    this.setState(prevState => {
+      return {
+        contacts: [...prevState.contacts, JSON.parse(contact)],
+      };
     });
+    localStorage.setItem('ContactsArray', JSON.stringify(this.state.contacts));
+  };
+  makeContactsLocal = () => {
+    if (localStorage.getItem('ContactsArray')) {
+      return;
+    }
+    localStorage.setItem('ContactsArray', JSON.stringify(this.state.contacts));
+  };
+
+  LoadContactsLocal = () => {
+    const contactArray = localStorage.getItem('ContactsArray');
+    return JSON.parse(contactArray);
   };
 
   deleteContacts = id => {
-    // console.log(id);
+    localStorage.removeItem(id);
     this.setState(prevState => {
       return {
         contacts: prevState.contacts.filter(contact => contact.id !== id),
@@ -45,17 +61,19 @@ export class App extends Component {
     this.setState({ filter: find });
   };
 
+  // onLoad={this.makeContactsLocal()}
+
   render() {
     return (
       <div className={AppCss.component}>
         <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.onSubmitHandler} />
+        <ContactForm onSubmit={this.onSubmitHandler} onLoad={this.makeContactsLocal()} />
         <h2>Contacts</h2>
         <Filter options={this.state.contacts} onChange={this.findByName} />
         {this.state.filter ? (
           <ContactList options={this.state.filter} onDelete={this.deleteContacts} />
         ) : (
-          <ContactList options={this.state.contacts} onDelete={this.deleteContacts} />
+          <ContactList options={this.LoadContactsLocal()} onDelete={this.deleteContacts} />
         )}
       </div>
     );

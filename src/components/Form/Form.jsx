@@ -21,7 +21,7 @@ export class ContactForm extends Component {
       name,
       number,
     };
-    this.props.onSubmit(newUser);
+    this.props.onSubmit(localStorage.setItem('Contacts', JSON.stringify(newUser)));
     this.setState({ name: '', number: '' });
   };
 
