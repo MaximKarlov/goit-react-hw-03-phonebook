@@ -1,0 +1,15 @@
+.filter {
+}
+.label {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+.input {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 20px;
+}
