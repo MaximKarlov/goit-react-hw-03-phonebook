@@ -4,7 +4,7 @@ import ContactCss from './Contacts.module.css';
 
 export const ContactList = ({ options, onDelete }) => (
   <ul className={ContactCss.contact}>
-    {options === []
+    {options.length === 0
       ? 'Contact is empty. Please add contact!!!'
       : options.map(({ id, name, number }) => (
           <ContactsItem name={name} id={id} key={id} number={number} onDelete={onDelete} />
