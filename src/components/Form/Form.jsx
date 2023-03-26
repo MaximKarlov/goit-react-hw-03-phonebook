@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+
+import { save } from '../storage.js';
+import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import FormCss from '../Form/Form.module.css';
 
@@ -21,8 +24,10 @@ export class ContactForm extends Component {
       name,
       number,
     };
-    this.props.onSubmit(localStorage.setItem('Contacts', JSON.stringify(newUser)));
-    this.setState({ name: '', number: '' });
+    if (this.props.onSubmit(newUser)) {
+      this.setState({ name: '', number: '' });
+      save('contacts', newUser);
+    } else this.setState({ name: '' });
   };
 
   render() {
@@ -62,3 +67,7 @@ export class ContactForm extends Component {
     );
   }
 }
+
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
