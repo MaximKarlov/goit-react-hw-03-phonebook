@@ -31,13 +31,20 @@ export class App extends Component {
     }
   }
 
+  componentDidUpdate(_, prevState) {
+    const { contacts } = this.state;
+    if (prevState.contacts !== contacts) {
+      console.log('Contacts added succesfuly');
+      save('ContactsArray', contacts);
+    }
+  }
+
   onSubmitHandler = data => {
     const { name } = data;
     if (this.state.contacts.find(elem => elem.name === name)) {
       alert(`${name} is already existing`);
       return false;
     } else {
-      this.addToLocalStorage(data);
       this.setState(prevState => {
         return {
           contacts: [...prevState.contacts, data],
@@ -47,22 +54,12 @@ export class App extends Component {
     }
   };
 
-  addToLocalStorage = data => {
-    let existingContacts = load('ContactsArray');
-    if (existingContacts === null) existingContacts = [];
-    existingContacts.push(data);
-    save('ContactsArray', existingContacts);
-  };
-
   deleteContacts = id => {
     this.setState(prevState => {
       return {
         contacts: prevState.contacts.filter(contact => contact.id !== id),
       };
     });
-    setTimeout(() => {
-      save('ContactsArray', this.state.contacts);
-    }, 300);
   };
 
   findByName = e => {
